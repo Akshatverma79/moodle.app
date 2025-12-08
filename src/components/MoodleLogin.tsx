@@ -1,6 +1,6 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import { Lock, User } from "lucide-react";
+import { ArrowRight, Lock, School, IdCard } from "lucide-react";
 import { useState } from "react";
 
 const MOODLE_COOKIE = "moodle_token";
@@ -17,7 +17,7 @@ export default function MoodleLogin({ onLogin }: { onLogin: () => void }) {
         setError("");
 
         try {
-            // Use relative path so requests go through the Vite Proxy
+            // FIXED: Using relative path so it works on any port/deployment
             const response = await axios.get("/moodle-api/login/token.php", {
                 params: {
                     username: username,
@@ -27,7 +27,7 @@ export default function MoodleLogin({ onLogin }: { onLogin: () => void }) {
             });
 
             if (response.data.error) {
-                setError("Login failed: " + response.data.error);
+                setError("Access Denied: " + response.data.error);
             } else if (response.data.token) {
                 Cookies.set(MOODLE_COOKIE, response.data.token, { expires: 90 });
                 onLogin();
@@ -36,56 +36,93 @@ export default function MoodleLogin({ onLogin }: { onLogin: () => void }) {
             }
         } catch (err) {
             console.error(err);
-            setError("Network error. Check your internet connection.");
+            setError("Unable to connect to KIET servers.");
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
-            <div className="w-full max-w-md bg-white p-8 border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
-                <h2 className="text-3xl font-black text-center mb-6 uppercase tracking-wider">
-                    Moodle Tracker
-                </h2>
-                <form onSubmit={handleLogin} className="space-y-4">
+        <div className="flex items-center justify-center min-h-screen bg-slate-50 px-4 font-sans text-slate-900">
+            <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl border border-slate-100 animate-fade-in">
+                
+                {/* Header Section */}
+                <div className="flex flex-col items-center mb-8">
+                    <div className="bg-indigo-600 p-3 rounded-2xl shadow-lg shadow-indigo-200 mb-4 transform transition-transform hover:scale-105 duration-300">
+                        <School className="text-white h-8 w-8" />
+                    </div>
+                    <h2 className="text-2xl font-black text-slate-800 tracking-tight">
+                        Student Portal
+                    </h2>
+                    <p className="text-sm text-slate-500 font-medium mt-1">
+                        Sign in to access your Moodle Dashboard
+                    </p>
+                </div>
+                
+                <form onSubmit={handleLogin} className="space-y-5">
+                    {/* Library ID Field */}
                     <div>
-                        <label className="block font-bold mb-1">University Roll No</label>
-                        <div className="flex items-center border-2 border-black p-2">
-                            <User className="mr-2" />
+                        <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider ml-1">
+                            Library ID
+                        </label>
+                        <div className="relative group">
+                            <div className="absolute left-3 top-3.5 text-slate-400 group-focus-within:text-indigo-600 transition-colors">
+                                <IdCard size={20} />
+                            </div>
                             <input
                                 type="text"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
-                                className="w-full outline-none"
-                                placeholder="Roll No..."
+                                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all font-semibold text-slate-700 placeholder-slate-400"
+                                placeholder="e.g. 222..."
                                 required
                             />
                         </div>
                     </div>
+
+                    {/* Password Field */}
                     <div>
-                        <label className="block font-bold mb-1">Password</label>
-                        <div className="flex items-center border-2 border-black p-2">
-                            <Lock className="mr-2" />
+                        <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider ml-1">
+                            Password
+                        </label>
+                        <div className="relative group">
+                            <div className="absolute left-3 top-3.5 text-slate-400 group-focus-within:text-indigo-600 transition-colors">
+                                <Lock size={20} />
+                            </div>
                             <input
                                 type="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full outline-none"
-                                placeholder="Password"
+                                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all font-semibold text-slate-700 placeholder-slate-400"
+                                placeholder="••••••••"
                                 required
                             />
                         </div>
                     </div>
-                    {error && <p className="text-red-600 font-bold bg-red-100 p-2 border-2 border-red-600">{error}</p>}
+                    
+                    {/* Error Message */}
+                    {error && (
+                        <div className="p-3 bg-red-50 text-red-600 text-xs font-bold rounded-lg border border-red-100 flex items-center animate-pulse">
+                            <span className="mr-2 text-base">⚠️</span> {error}
+                        </div>
+                    )}
+                    
+                    {/* Submit Button */}
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-black text-white font-bold py-3 hover:-translate-y-1 transition-transform border-2 border-transparent"
+                        className="w-full bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-indigo-200 hover:shadow-xl transform transition-all active:scale-[0.98] flex items-center justify-center gap-2 mt-4"
                     >
-                        {loading ? "CONNECTING..." : "ACCESS ASSIGNMENTS"}
+                        {loading ? "Verifying..." : <>Secure Login <ArrowRight size={18} strokeWidth={2.5}/></>}
                     </button>
                 </form>
+
+                {/* Footer Text */}
+                <div className="mt-8 text-center">
+                    <p className="text-xs text-slate-400 font-medium">
+                        Protected by KIET Authentication
+                    </p>
+                </div>
             </div>
         </div>
     );
