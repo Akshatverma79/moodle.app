@@ -1,73 +1,72 @@
-# React + TypeScript + Vite
+# 🎓 KIET Moodle Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, responsive student dashboard built with **React** and **TypeScript** to help KIET students track assignments, view deadlines, and stay organized. This app interfaces directly with the KIET LMS Moodle API to provide a cleaner, faster user experience.
 
-Currently, two official plugins are available:
+![Project Status](https://img.shields.io/badge/status-active-success)
+![License](https://img.shields.io/badge/license-MIT-blue)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Key Features
 
-## React Compiler
+* **🔐 Secure Authentication:** Log in directly using your Library ID and Password (verified via KIET Moodle).
+* **📅 Smart Dashboard:** View all assignments sorted by deadline.
+* **🔎 Advanced Filtering:**
+    * **Search:** Instantly find assignments by name or course.
+    * **Status Tabs:** Toggle between **All**, **Upcoming**, and **Overdue** tasks.
+    * **Course Filter:** Filter assignments by specific subjects.
+* **🔔 Deadline Notifications:** Get browser notifications for assignments due within 24 hours.
+* **👁️ Password Visibility:** Toggle password visibility during login.
+* **📱 Responsive Design:** Fully optimized for mobile and desktop using Tailwind CSS.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠️ Tech Stack
 
-## Expanding the ESLint configuration
+* **Frontend:** [React](https://react.dev/) (v19), [TypeScript](https://www.typescriptlang.org/)
+* **Build Tool:** [Vite](https://vitejs.dev/)
+* **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+* **Icons:** [Lucide React](https://lucide.dev/)
+* **HTTP Client:** [Axios](https://axios-http.com/)
+* **State/Auth:** [JS Cookie](https://github.com/js-cookie/js-cookie)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🚀 Getting Started
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Follow these steps to run the project locally.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Prerequisites
+* Node.js (v18 or higher recommended)
+* npm or yarn
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
+### Installation
+
+1.  **Clone the repository:**
+    ```bash
+    git clone [https://github.com/your-username/kiet-moodle-app.git](https://github.com/your-username/kiet-moodle-app.git)
+    cd kiet-moodle-app
+    ```
+
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
+
+3.  **Run the development server:**
+    ```bash
+    npm run dev
+    ```
+
+4.  Open your browser and navigate to `http://localhost:5173`.
+
+## ⚙️ Configuration & API Proxy
+
+This project relies on a **Proxy** to communicate with the HTTP-based KIET Moodle server (`http://lms.kiet.edu`) from a modern HTTPS environment.
+
+### Local Development
+The proxy is configured in `vite.config.ts`. It redirects requests from `/moodle-api` to the actual Moodle server to avoid CORS issues.
+
+```ts
+// vite.config.ts
+proxy: {
+  '/moodle-api': {
+    target: '[http://lms.kiet.edu/moodle](http://lms.kiet.edu/moodle)',
+    changeOrigin: true,
+    rewrite: (path) => path.replace(/^\/moodle-api/, ''),
   },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+}
