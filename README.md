@@ -1,4 +1,4 @@
-# 🎓 KIET Moodle Tracker
+# 🎓 Moodle Tracker
 
 A modern, responsive student dashboard built with **React** and **TypeScript** to help KIET students track assignments, view deadlines, and stay organized. This app interfaces directly with the KIET LMS Moodle API to provide a cleaner, faster user experience.
 
