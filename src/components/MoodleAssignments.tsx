@@ -2,10 +2,10 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { 
     Calendar, CheckCircle, Clock, ExternalLink, Filter, 
-    LogOut, Search, AlertTriangle, BookOpen, Bell
+    LogOut, Search, AlertTriangle, BookOpen
 } from "lucide-react";
 import { useEffect, useState, useMemo } from "react";
-import { AssignmentEvent, MoodleEventsResponse } from "../types/moodle";
+import type { AssignmentEvent, MoodleEventsResponse } from "../types/moodle";
 
 export default function MoodleAssignments({ onLogout }: { onLogout: () => void }) {
     const [assignments, setAssignments] = useState<AssignmentEvent[]>([]);
