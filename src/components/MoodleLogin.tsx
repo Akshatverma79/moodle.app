@@ -1,6 +1,6 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import { ArrowRight, Lock, School, IdCard } from "lucide-react";
+import { ArrowRight, Lock, School, IdCard, Eye, EyeOff } from "lucide-react"; //
 import { useState } from "react";
 
 const MOODLE_COOKIE = "moodle_token";
@@ -8,6 +8,7 @@ const MOODLE_COOKIE = "moodle_token";
 export default function MoodleLogin({ onLogin }: { onLogin: () => void }) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false); // Added state for password visibility
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
@@ -90,13 +91,21 @@ export default function MoodleLogin({ onLogin }: { onLogin: () => void }) {
                                 <Lock size={20} />
                             </div>
                             <input
-                                type="password"
+                                type={showPassword ? "text" : "password"} // Dynamic type
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all font-semibold text-slate-700 placeholder-slate-400"
+                                className="w-full pl-10 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all font-semibold text-slate-700 placeholder-slate-400"
                                 placeholder="••••••••"
                                 required
                             />
+                            {/* Toggle Button */}
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3 top-3.5 text-slate-400 hover:text-indigo-600 transition-colors focus:outline-none"
+                            >
+                                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                            </button>
                         </div>
                     </div>
                     
