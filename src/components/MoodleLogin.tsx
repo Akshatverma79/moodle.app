@@ -1,14 +1,15 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import { ArrowRight, Lock, School, IdCard, Eye, EyeOff } from "lucide-react"; //
+import { ArrowRight, Lock, School, IdCard, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 
 const MOODLE_COOKIE = "moodle_token";
+const USERNAME_COOKIE = "moodle_username"; // New constant
 
 export default function MoodleLogin({ onLogin }: { onLogin: () => void }) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [showPassword, setShowPassword] = useState(false); // Added state for password visibility
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
@@ -18,7 +19,6 @@ export default function MoodleLogin({ onLogin }: { onLogin: () => void }) {
         setError("");
 
         try {
-            // FIXED: Using relative path so it works on any port/deployment
             const response = await axios.get("/moodle-api/login/token.php", {
                 params: {
                     username: username,
@@ -30,7 +30,9 @@ export default function MoodleLogin({ onLogin }: { onLogin: () => void }) {
             if (response.data.error) {
                 setError("Access Denied: " + response.data.error);
             } else if (response.data.token) {
+                // Save both token and username
                 Cookies.set(MOODLE_COOKIE, response.data.token, { expires: 90 });
+                Cookies.set(USERNAME_COOKIE, username, { expires: 90 }); 
                 onLogin();
             } else {
                 setError("Unexpected response from server.");
@@ -47,7 +49,6 @@ export default function MoodleLogin({ onLogin }: { onLogin: () => void }) {
         <div className="flex items-center justify-center min-h-screen bg-slate-50 px-4 font-sans text-slate-900">
             <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl border border-slate-100 animate-fade-in">
                 
-                {/* Header Section */}
                 <div className="flex flex-col items-center mb-8">
                     <div className="bg-indigo-600 p-3 rounded-2xl shadow-lg shadow-indigo-200 mb-4 transform transition-transform hover:scale-105 duration-300">
                         <School className="text-white h-8 w-8" />
@@ -61,7 +62,6 @@ export default function MoodleLogin({ onLogin }: { onLogin: () => void }) {
                 </div>
                 
                 <form onSubmit={handleLogin} className="space-y-5">
-                    {/* Library ID Field */}
                     <div>
                         <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider ml-1">
                             Library ID
@@ -81,7 +81,6 @@ export default function MoodleLogin({ onLogin }: { onLogin: () => void }) {
                         </div>
                     </div>
 
-                    {/* Password Field */}
                     <div>
                         <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider ml-1">
                             Password
@@ -91,14 +90,13 @@ export default function MoodleLogin({ onLogin }: { onLogin: () => void }) {
                                 <Lock size={20} />
                             </div>
                             <input
-                                type={showPassword ? "text" : "password"} // Dynamic type
+                                type={showPassword ? "text" : "password"}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 className="w-full pl-10 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all font-semibold text-slate-700 placeholder-slate-400"
                                 placeholder="••••••••"
                                 required
                             />
-                            {/* Toggle Button */}
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
@@ -109,14 +107,12 @@ export default function MoodleLogin({ onLogin }: { onLogin: () => void }) {
                         </div>
                     </div>
                     
-                    {/* Error Message */}
                     {error && (
                         <div className="p-3 bg-red-50 text-red-600 text-xs font-bold rounded-lg border border-red-100 flex items-center animate-pulse">
                             <span className="mr-2 text-base">⚠️</span> {error}
                         </div>
                     )}
                     
-                    {/* Submit Button */}
                     <button
                         type="submit"
                         disabled={loading}
@@ -126,7 +122,6 @@ export default function MoodleLogin({ onLogin }: { onLogin: () => void }) {
                     </button>
                 </form>
 
-                {/* Footer Text */}
                 <div className="mt-8 text-center">
                     <p className="text-xs text-slate-400 font-medium">
                         Protected by KIET Authentication
