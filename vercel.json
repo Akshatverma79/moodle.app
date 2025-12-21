@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/moodle-api/:match*",
+      "destination": "http://lms.kiet.edu/moodle/:match*"
+    }
+  ]
+}
