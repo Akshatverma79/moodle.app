@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/moodle-api/:path*",
-      "destination": "/api/proxy?path=:path*"
+      "source": "/moodle-api/:slug*",
+      "destination": "/api/proxy?slug=:slug*"
     }
   ]
 }
