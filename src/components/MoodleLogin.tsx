@@ -52,7 +52,7 @@ export default function MoodleLogin({ onLogin }: { onLogin: () => void }) {
                             <School className="text-white h-10 w-10" />
                         </div>
                         <h2 className="text-3xl font-black text-slate-900 tracking-tighter">
-                            KIET Moodle
+                            LMS Moodle
                         </h2>
                         <div className="flex items-center gap-1.5 mt-2 bg-indigo-100/50 px-3 py-1 rounded-full">
                             <ShieldCheck className="text-indigo-600 h-3.5 w-3.5" />
@@ -79,7 +79,7 @@ export default function MoodleLogin({ onLogin }: { onLogin: () => void }) {
 
                         {/* Password Field */}
                         <div className="animate-fade-in-up [animation-delay:400ms] opacity-0 [animation-fill-mode:forwards]">
-                            <label className="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-widest ml-1">Secret Key</label>
+                            <label className="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-widest ml-1">Password</label>
                             <div className="relative group">
                                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-600 transition-all" size={20} />
                                 <input
@@ -119,7 +119,7 @@ export default function MoodleLogin({ onLogin }: { onLogin: () => void }) {
                     </form>
 
                     <p className="mt-8 text-center text-xs text-slate-400 font-semibold tracking-wide">
-                        KIET Group of Institutions
+                        All credentials are securely handled via Moodle's official API.
                     </p>
                 </div>
             </div>
