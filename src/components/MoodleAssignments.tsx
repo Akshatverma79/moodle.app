@@ -23,7 +23,7 @@ export default function MoodleAssignments({ onLogout }: { onLogout: () => void }
     });
 
     // --- DATA FETCHING (React Query) ---
-    const { data: assignments = [], isLoading, isError } = useQuery({
+    const { data: assignments = [], isLoading, isError } = useQuery<AssignmentEvent[]>({
         queryKey: ["assignments"],
         queryFn: async () => {
             const threeMonthsAgo = Math.floor(Date.now() / 1000) - (90 * 24 * 60 * 60);
@@ -39,8 +39,8 @@ export default function MoodleAssignments({ onLogout }: { onLogout: () => void }
             checkNotifications(fetchedEvents);
             return fetchedEvents;
         },
-        refetchInterval: 1000 * 60 * 10, // Refetch every 10 minutes
-        staleTime: 1000 * 60 * 5,        // Consider data fresh for 5 minutes
+        refetchInterval: 1000 * 60 * 10,
+        staleTime: 1000 * 60 * 5,
     });
 
     // --- NOTIFICATIONS ---

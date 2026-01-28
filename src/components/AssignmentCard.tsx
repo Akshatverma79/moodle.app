@@ -1,4 +1,4 @@
-import { Calendar, Clock, ExternalLink, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { Calendar, ExternalLink, AlertTriangle, CheckCircle2 } from "lucide-react";
 import DOMPurify from "dompurify";
 import type { AssignmentEvent } from "../types/moodle";
 

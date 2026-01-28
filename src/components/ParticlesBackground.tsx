@@ -39,7 +39,7 @@ export default function ParticlesBackground() {
                         outModes: { default: "out" },
                     },
                     number: {
-                        density: { enable: true, area: 800 },
+                        density: { enable: true, width: 800 },
                         value: 80,
                     },
                     opacity: { value: 0.5 },
