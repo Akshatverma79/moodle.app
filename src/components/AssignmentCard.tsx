@@ -1,4 +1,4 @@
-import { Calendar, ExternalLink, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { Calendar, AlertTriangle, CheckCircle2, ArrowUpRight, Clock } from "lucide-react";
 import DOMPurify from "dompurify";
 import type { AssignmentEvent } from "../types/moodle";
 
@@ -9,57 +9,73 @@ interface Props {
 }
 
 export default function AssignmentCard({ assign, isCompleted, onToggleComplete }: Props) {
-    const daysLeft = Math.ceil(((assign.timesort * 1000) - Date.now()) / (1000 * 60 * 60 * 24));
+    const now = Date.now();
+    const dueDate = assign.timesort * 1000;
+    const daysLeft = Math.ceil((dueDate - now) / (1000 * 60 * 60 * 24));
     const isOverdue = daysLeft < 0;
 
     return (
-        <div className={`group bg-white rounded-2xl p-5 border transition-all flex flex-col h-full ${
-            isCompleted ? 'opacity-60 border-emerald-100 bg-emerald-50/30' : 'border-slate-200 hover:shadow-lg'
+        <div className={`relative group bg-white rounded-[2rem] p-6 border-2 transition-all flex flex-col h-full ${
+            isCompleted 
+            ? 'opacity-60 border-emerald-100 bg-emerald-50/20' 
+            : 'border-slate-100 hover:border-indigo-200 hover:shadow-2xl hover:shadow-indigo-500/5'
         }`}>
-            <div className="flex justify-between items-start mb-3">
-                <span className="bg-slate-100 text-slate-600 text-[10px] font-bold px-2 py-1 rounded-md uppercase truncate max-w-[50%]">
+            {/* Status Header */}
+            <div className="flex justify-between items-start mb-5">
+                <span className="bg-indigo-50 text-indigo-700 text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest border border-indigo-100/50 truncate max-w-[60%]">
                     {assign.course.shortname}
                 </span>
                 
-                <div className="flex gap-2">
-                    <button 
-                        onClick={() => onToggleComplete(assign.id)}
-                        className={`p-1 rounded-md transition-colors ${isCompleted ? 'text-emerald-600' : 'text-slate-300 hover:text-emerald-500'}`}
-                    >
-                        <CheckCircle2 size={18} />
-                    </button>
-                    {isOverdue && !isCompleted && (
-                        <span className="text-[10px] font-bold text-red-600 bg-red-50 px-2 py-1 rounded-full border border-red-100">
-                            <AlertTriangle size={10} /> Overdue
-                        </span>
-                    )}
-                </div>
+                <button 
+                    onClick={() => onToggleComplete(assign.id)}
+                    className={`p-2 rounded-xl transition-all ${isCompleted ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-200' : 'bg-slate-50 text-slate-300 hover:text-emerald-500 hover:bg-emerald-50'}`}
+                >
+                    <CheckCircle2 size={20} />
+                </button>
             </div>
             
-            <h3 className={`font-bold text-lg leading-snug mb-2 ${isCompleted ? 'line-through text-slate-400' : 'text-slate-800'}`}>
+            <h3 className={`font-bold text-lg leading-tight mb-3 transition-colors ${isCompleted ? 'line-through text-slate-400' : 'text-slate-800 group-hover:text-indigo-600'}`}>
                 {assign.name}
             </h3>
             
-            {/* Sanitized HTML Content */}
+            {/* Description (Sanitized) */}
             <div 
-                className="text-xs text-slate-500 mb-4 line-clamp-2" 
-                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(assign.description || "") }} 
+                className="text-xs text-slate-500 mb-6 line-clamp-3 font-medium leading-relaxed" 
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(assign.description || "No description provided.") }} 
             />
             
-            <div className="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between">
-                <div className="flex items-center text-xs font-semibold text-slate-400">
-                    <Calendar size={12} className="mr-1.5" />
-                    {new Date(assign.timesort * 1000).toLocaleDateString()}
+            <div className="mt-auto pt-5 border-t border-slate-50 flex items-center justify-between">
+                <div>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Due Date</p>
+                    <div className="flex items-center text-xs font-bold text-slate-600">
+                        <Calendar size={14} className="mr-2 text-indigo-500" />
+                        {new Date(dueDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+                    </div>
                 </div>
+
+                {!isCompleted && (
+                    <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase border ${
+                        isOverdue 
+                        ? 'text-red-600 bg-red-50 border-red-100' 
+                        : daysLeft <= 2 ? 'text-amber-600 bg-amber-50 border-amber-100' : 'text-slate-500 bg-slate-50 border-slate-100'
+                    }`}>
+                        {isOverdue ? <AlertTriangle size={12} /> : <Clock size={12} />}
+                        {isOverdue ? 'Overdue' : `${daysLeft}d left`}
+                    </div>
+                )}
+            </div>
+
+            {/* Hover Action Overlay */}
+            {!isCompleted && (
                 <a 
                     href={assign.url} 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 bg-slate-900 text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-indigo-600 transition-all"
+                    className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity bg-indigo-600 text-white p-2 rounded-xl shadow-xl hover:scale-110 active:scale-95"
                 >
-                    Open <ExternalLink size={12} />
+                    <ArrowUpRight size={18} />
                 </a>
-            </div>
+            )}
         </div>
     );
 }
