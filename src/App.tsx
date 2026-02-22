@@ -1,5 +1,6 @@
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
+import { Analytics } from "@vercel/analytics/react";
 import MoodleAssignments from "./components/MoodleAssignments";
 import MoodleLogin from "./components/MoodleLogin";
 
@@ -31,6 +32,7 @@ function App() {
       ) : (
         <MoodleAssignments onLogout={handleLogout} />
       )}
+      <Analytics />
     </main>
   );
 }
