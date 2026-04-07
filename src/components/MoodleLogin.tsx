@@ -25,7 +25,7 @@ export default function MoodleLogin({ onLogin }: { onLogin: () => void }) {
             if (response.data.error) {
                 setError(response.data.error === "invalidlogin" ? "Invalid Library ID or Password" : response.data.error);
             } else if (response.data.token) {
-                const opt = { expires: 90, secure: true, sameSite: 'strict' as const };
+                const opt = { expires: 2/24, secure: true, sameSite: 'strict' as const };
                 Cookies.set(MOODLE_COOKIE, response.data.token, opt);
                 Cookies.set(USERNAME_COOKIE, username, opt); 
                 onLogin();
