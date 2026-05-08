@@ -1,9 +1,8 @@
 import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import Cookies from "js-cookie";
 import { 
-    CheckCircle, LogOut, Search, 
-    BookOpen, User, Loader2, LayoutDashboard, 
+    CheckCircle, Search, 
+    BookOpen, Loader2, 
     Clock, AlertCircle, RefreshCw, 
     LayoutGrid
 } from "lucide-react";
@@ -11,13 +10,12 @@ import moodleClient from "../api/moodleClient";
 import AssignmentCard from "./AssignmentCard";
 import type { AssignmentEvent } from "../types/moodle";
 
-export default function MoodleAssignments({ onLogout }: { onLogout: () => void }) {
+export default function MoodleAssignments() {
     // --- STATE ---
     const [searchQuery, setSearchQuery] = useState("");
     const [filterStatus] = useState<"all" | "overdue" | "upcoming">("all");
     const [selectedCourse] = useState<string>("all");
     const [viewMode, setViewMode] = useState<"dashboard" | "courses">("dashboard");
-    const [username] = useState(() => Cookies.get("moodle_username") || "");
 
     const [completedIds, setCompletedIds] = useState<number[]>(() => {
         const saved = localStorage.getItem("completed_assignments");
@@ -87,29 +85,7 @@ export default function MoodleAssignments({ onLogout }: { onLogout: () => void }
 
     // --- UI COMPONENTS ---
     return (
-        <div className="min-h-screen bg-slate-50 text-slate-900 pb-20">
-            {/* --- NAVIGATION --- */}
-            <nav className="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
-                <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="bg-indigo-600 p-2 rounded-xl shadow-lg shadow-indigo-100">
-                            <LayoutDashboard className="text-white h-5 w-5" />
-                        </div>
-                        <h1 className="text-xl font-black text-slate-800 tracking-tight">Assignment TRACKER</h1>
-                    </div>
-                    
-                    <div className="flex items-center gap-4">
-                        <div className="hidden sm:flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-100">
-                            <User size={14} className="text-indigo-600" />
-                            <span className="text-[11px] font-bold text-slate-600">{username}</span>
-                        </div>
-                        <button onClick={onLogout} className="p-2 hover:bg-red-50 text-slate-400 hover:text-red-600 rounded-lg transition-colors">
-                            <LogOut size={20} />
-                        </button>
-                    </div>
-                </div>
-            </nav>
-
+        <div className="pb-20">
             <main className="max-w-6xl mx-auto px-4 mt-8">
                 {/* --- STATS OVERVIEW --- */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
@@ -118,7 +94,7 @@ export default function MoodleAssignments({ onLogout }: { onLogout: () => void }
                         { label: 'Upcoming', value: stats.upcoming, icon: Clock, color: 'emerald' },
                         { label: 'Overdue', value: stats.overdue, icon: AlertCircle, color: 'red' },
                     ].map((s, i) => (
-                        <div key={i} className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex items-center gap-5">
+                        <div key={i} className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex items-center gap-5 hover:shadow-md transition-shadow duration-200">
                             <div className={`p-3 rounded-2xl bg-slate-50`}>
                                 <s.icon className={`h-6 w-6 ${s.color === 'indigo' ? 'text-indigo-600' : s.color === 'emerald' ? 'text-emerald-600' : 'text-red-600'}`} />
                             </div>

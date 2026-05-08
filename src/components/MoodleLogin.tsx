@@ -1,6 +1,6 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import { ArrowRight, Lock, School, IdCard, Eye, EyeOff, ShieldCheck } from "lucide-react";
+import { ArrowRight, Lock, School, IdCard, Eye, EyeOff, ShieldCheck, Zap, FileText, ClipboardList } from "lucide-react";
 import { useState } from "react";
 import ParticlesBackground from "./ParticlesBackground";
 
@@ -37,6 +37,12 @@ export default function MoodleLogin({ onLogin }: { onLogin: () => void }) {
         }
     };
 
+    const features = [
+        { icon: ClipboardList, text: "Track Assignments" },
+        { icon: FileText, text: "Course Notes" },
+        { icon: Zap, text: "Real-time Sync" },
+    ];
+
     return (
         <div className="relative flex items-center justify-center min-h-screen overflow-hidden font-sans">
             {/* Animated Mesh Background */}
@@ -44,17 +50,20 @@ export default function MoodleLogin({ onLogin }: { onLogin: () => void }) {
             <ParticlesBackground />
             {/* Glassmorphism Login Card */}
             <div className="relative w-full max-w-md mx-4 z-10">
-                <div className="bg-white/80 backdrop-blur-xl p-8 rounded-3xl shadow-2xl border border-white/20 animate-fade-in-up">
+                <div className="bg-white/80 backdrop-blur-xl p-8 rounded-3xl shadow-2xl border border-white/30 animate-fade-in-up ring-1 ring-indigo-500/10">
                     
                     {/* Logo Area */}
                     <div className="flex flex-col items-center mb-8">
-                        <div className="bg-indigo-600 p-4 rounded-2xl shadow-xl shadow-indigo-500/30 mb-4 transform transition-transform hover:rotate-12 duration-300">
+                        <div className="relative bg-gradient-to-br from-indigo-600 to-violet-600 p-4 rounded-2xl shadow-xl shadow-indigo-500/30 mb-4 transform transition-transform hover:rotate-12 duration-300">
                             <School className="text-white h-10 w-10" />
+                            {/* Glow ring */}
+                            <div className="absolute inset-0 rounded-2xl bg-indigo-400/20 blur-lg -z-10" />
                         </div>
                         <h2 className="text-3xl font-black text-slate-900 tracking-tighter">
                             LMS Moodle
                         </h2>
                         <div className="flex items-center gap-1.5 mt-2 bg-indigo-100/50 px-3 py-1 rounded-full">
+                            <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse-subtle" />
                             <ShieldCheck className="text-indigo-600 h-3.5 w-3.5" />
                             <span className="text-[10px] text-indigo-700 font-bold uppercase tracking-widest">Secure Portal</span>
                         </div>
@@ -101,7 +110,7 @@ export default function MoodleLogin({ onLogin }: { onLogin: () => void }) {
                         </div>
                         
                         {error && (
-                            <div className="p-3 bg-red-50 text-red-600 text-xs font-bold rounded-xl border border-red-100 flex items-center animate-bounce">
+                            <div className="p-3 bg-red-50 text-red-600 text-xs font-bold rounded-xl border border-red-100 flex items-center animate-shake">
                                 <span className="mr-2">⚠️</span> {error}
                             </div>
                         )}
@@ -109,16 +118,26 @@ export default function MoodleLogin({ onLogin }: { onLogin: () => void }) {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="group relative w-full overflow-hidden bg-indigo-600 text-white font-bold py-4 rounded-2xl shadow-xl shadow-indigo-500/40 transition-all hover:scale-[1.02] active:scale-[0.98] animate-fade-in-up [animation-delay:600ms] opacity-0 [animation-fill-mode:forwards]"
+                            className="group relative w-full overflow-hidden bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold py-4 rounded-2xl shadow-xl shadow-indigo-500/40 transition-all hover:scale-[1.02] active:scale-[0.98] animate-fade-in-up [animation-delay:600ms] opacity-0 [animation-fill-mode:forwards]"
                         >
-                            <div className="absolute inset-0 bg-gradient-to-r from-indigo-400 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            <div className="absolute inset-0 bg-gradient-to-r from-indigo-400 to-violet-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                             <span className="relative flex items-center justify-center gap-2">
                                 {loading ? "Authenticating..." : <>Access Dashboard <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" /></>}
                             </span>
                         </button>
                     </form>
 
-                    <p className="mt-8 text-center text-xs text-slate-400 font-semibold tracking-wide">
+                    {/* Feature pills */}
+                    <div className="mt-6 flex items-center justify-center gap-2 flex-wrap animate-fade-in-up [animation-delay:800ms] opacity-0 [animation-fill-mode:forwards]">
+                        {features.map((f, i) => (
+                            <div key={i} className="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-100">
+                                <f.icon size={12} className="text-indigo-500" />
+                                <span className="text-[10px] font-bold text-slate-500">{f.text}</span>
+                            </div>
+                        ))}
+                    </div>
+
+                    <p className="mt-6 text-center text-xs text-slate-400 font-semibold tracking-wide">
                         All credentials are securely handled via Moodle's official API.
                     </p>
                 </div>

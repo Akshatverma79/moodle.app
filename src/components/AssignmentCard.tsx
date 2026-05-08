@@ -13,11 +13,20 @@ export default function AssignmentCard({ assign, isCompleted, onToggleComplete }
     const daysLeft = Math.ceil((dueDate - Date.now()) / (1000 * 60 * 60 * 24));
     const isOverdue = daysLeft < 0;
 
+    // Urgency-based accent color
+    const accentColor = isCompleted
+        ? "border-l-emerald-400"
+        : isOverdue
+        ? "border-l-red-500"
+        : daysLeft <= 3
+        ? "border-l-amber-400"
+        : "border-l-indigo-400";
+
     return (
-        <div className={`relative bg-white rounded-[2.5rem] p-7 border-2 transition-all flex flex-col h-full ${
+        <div className={`relative bg-white rounded-[2rem] p-7 border-2 border-l-4 transition-all duration-200 flex flex-col h-full ${accentColor} ${
             isCompleted 
             ? 'opacity-60 border-emerald-100 bg-emerald-50/20' 
-            : 'border-slate-100 hover:border-indigo-200 hover:shadow-2xl shadow-sm'
+            : 'border-slate-100 hover:border-indigo-200 hover:shadow-xl hover:-translate-y-1 shadow-sm'
         }`}>
             {/* Top Badge & Mark Done */}
             <div className="flex justify-between items-start mb-4">
@@ -57,7 +66,7 @@ export default function AssignmentCard({ assign, isCompleted, onToggleComplete }
 
                     {!isCompleted && (
                         <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase ${
-                            isOverdue ? 'text-red-600 bg-red-50' : 'text-slate-500 bg-slate-50'
+                            isOverdue ? 'text-red-600 bg-red-50' : daysLeft <= 3 ? 'text-amber-600 bg-amber-50' : 'text-slate-500 bg-slate-50'
                         }`}>
                             {isOverdue ? <AlertTriangle size={12} /> : <Clock size={12} />}
                             {isOverdue ? 'Overdue' : `${daysLeft}d left`}
